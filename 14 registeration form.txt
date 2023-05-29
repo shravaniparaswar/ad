@@ -1,0 +1,380 @@
+MainActivity.java
+
+package com.example.registrationform;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.List;
+public class MainActivity extends AppCompatActivity {
+
+    private EditText nameEditText;
+    private Spinner subjectSpinner;
+    private RadioGroup genderRadioGroup;
+    private RadioButton maleRadioButton, femaleRadioButton,transRadioButton;
+    private CheckBox bachelorCheckBox, masterCheckBox, mtechCheckBox, mbaCheckBox;
+    private Button registerButton;
+    private String name, subject, gender, qualification;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        nameEditText = findViewById(R.id.nameEditText);
+        subjectSpinner = findViewById(R.id.subjectSpinner);
+
+        List<String> subjects = new ArrayList<>();
+        subjects.add("Android Development");
+        subjects.add("Fibre Optic Communication");
+        subjects.add("Digital Marketing");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
+                subjects);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subjectSpinner.setAdapter(adapter);
+
+        genderRadioGroup = findViewById(R.id.genderRadioGroup);
+        maleRadioButton = findViewById(R.id.maleRadioButton);
+        femaleRadioButton = findViewById(R.id.femaleRadioButton);
+        transRadioButton = findViewById(R.id.transRadioButton);
+        bachelorCheckBox = findViewById(R.id.bachelorCheckBox);
+        masterCheckBox = findViewById(R.id.masterCheckBox);
+        mtechCheckBox = findViewById(R.id.mtechCheckBox);
+        mbaCheckBox = findViewById(R.id.mbaCheckBox);
+        registerButton = findViewById(R.id.registerButton);
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (validate()) {
+                    Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                    intent.putExtra("name", name);
+                    intent.putExtra("subject", subject);
+                    intent.putExtra("gender", gender);
+                    intent.putExtra("qualification", qualification);
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+    private boolean validate() {
+        name = nameEditText.getText().toString().trim();
+        subject = subjectSpinner.getSelectedItem().toString();
+        gender = maleRadioButton.isChecked() ? "Male" : femaleRadioButton.isChecked()?"Female":"Transgender";
+        qualification = "";
+        if (bachelorCheckBox.isChecked()) {
+            qualification += "Bachelors of Engineering";
+        }
+        if (masterCheckBox.isChecked()) {
+            qualification += "Master of science";
+        }
+        if (mtechCheckBox.isChecked()) {
+            qualification += "Master of Engineering";
+        }
+        if (mbaCheckBox.isChecked()) {
+            qualification += "Master of Business Administration";
+        }
+        if (name.isEmpty()) {
+            Toast.makeText(this, "Please enter your name", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (qualification.isEmpty()) {
+            Toast.makeText(this, "Please select your qualification", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+}
+
+secondActivity.java
+
+package com.example.registrationform;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+public class SecondActivity extends AppCompatActivity {
+    private TextView nameValueTextView, subjectValueTextView, genderValueTextView,
+            qualificationValueTextView;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
+        nameValueTextView = findViewById(R.id.nameValueTextView);
+        subjectValueTextView = findViewById(R.id.subjectValueTextView);
+        genderValueTextView = findViewById(R.id.genderValueTextView);
+        qualificationValueTextView = findViewById(R.id.qualificationValueTextView);
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("name");
+        String subject = intent.getStringExtra("subject");
+        String gender = intent.getStringExtra("gender");
+        String qualification = intent.getStringExtra("qualification");
+        nameValueTextView.setText(name);
+        subjectValueTextView.setText(subject);
+        genderValueTextView.setText(gender);
+        qualificationValueTextView.setText(qualification);
+    }
+}
+
+activity_main.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+    <TextView
+        android:id="@+id/r1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registration Form"
+        android:textStyle="bold"
+        android:textSize="26dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginBottom="30dp"
+        />
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1. Name"
+        android:textStyle="bold"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp"/>
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your name"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp"/>
+    <TextView
+        android:id="@+id/subjectTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2. Subject"
+        android:textStyle="bold"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp"/>
+    <Spinner
+        android:id="@+id/subjectSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp"/>
+    <TextView
+        android:id="@+id/genderTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="3. Gender"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+    <RadioGroup
+        android:id="@+id/genderRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:textSize="20dp">
+        <RadioButton
+            android:id="@+id/maleRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Male"
+            android:layout_marginLeft="26dp"
+            android:layout_marginRight="26dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="20dp"/>
+        <RadioButton
+            android:id="@+id/femaleRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Female"
+            android:textSize="20dp"/>
+        <RadioButton
+            android:id="@+id/transRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Transgender"
+            android:textSize="20dp"/>
+
+    </RadioGroup>
+    <TextView
+        android:id="@+id/qualificationTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="4. Qualification"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+
+    <CheckBox
+        android:id="@+id/bachelorCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="10dp"
+        android:text="Bachelors of Engineering"
+        android:textSize="20dp" />
+
+    <CheckBox
+        android:id="@+id/masterCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="70dp"
+        android:layout_marginBottom="10dp"
+        android:text="Master of science"
+        android:textSize="20dp" />
+
+    <CheckBox
+        android:id="@+id/mtechCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Master of Engineering"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp"/>
+    <CheckBox
+        android:id="@+id/mbaCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Master of Business Administration"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp"/>
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp"
+
+        />
+
+</LinearLayout>
+
+activity_second.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SecondActivity"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+    <Button
+        android:id="@+id/app"
+        android:layout_width="411dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="20dp"
+        android:text="Details"
+        android:textSize="20dp" />
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name : "
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"/>
+    <TextView
+        android:id="@+id/nameValueTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"/>
+    <TextView
+        android:id="@+id/subjectTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Subject : "
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"/>
+    <TextView
+        android:id="@+id/subjectValueTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"/>
+    <TextView
+        android:id="@+id/genderTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gender : "
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"/>
+    <TextView
+        android:id="@+id/genderValueTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"/>
+    <TextView
+        android:id="@+id/qualificationTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Qualification : "
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"/>
+    <TextView
+        android:id="@+id/qualificationValueTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="10dp"/>
+</LinearLayout>
