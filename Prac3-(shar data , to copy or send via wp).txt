@@ -1,0 +1,60 @@
+//activity xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="Enter your message" />
+
+    <Button
+        android:id="@+id/sendMessageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send Message"
+        android:onClick="sharedata"/>
+
+</LinearLayout>
+
+
+//activity.java
+
+package com.example.pract3;
+
+import android.content.Intent;
+        import android.os.Bundle;
+
+        import com.google.android.material.snackbar.Snackbar;
+
+        import androidx.appcompat.app.AppCompatActivity;
+
+        import android.view.View;
+        import android.widget.EditText;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText editText;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        editText = findViewById(R.id.message);
+    }
+
+    public void sharedata (View view)
+    {
+        String data = editText.getText().toString();
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, data);
+        startActivity(Intent.createChooser(intent, "Share via"));
+    }
+}

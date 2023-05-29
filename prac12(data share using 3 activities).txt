@@ -1,0 +1,152 @@
+// data share using 3 activities
+
+// main activity. java
+
+package com.example.pract12;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+public class MainActivity extends AppCompatActivity {
+    private Button btnNext;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        btnNext = findViewById(R.id.btn_next);
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Activity2.class);
+                startActivity(intent);
+            }
+        });
+    }
+}
+
+//activity2.java 
+
+package com.example.pract12;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class Activity2 extends AppCompatActivity {
+    private EditText etData;
+    private Button btnShare;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_2);
+
+        etData = findViewById(R.id.et_data);
+        btnShare = findViewById(R.id.btn_share);
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String data = etData.getText().toString();
+                Intent intent = new Intent(Activity2.this, Activity3.class);
+                intent.putExtra("data", data);
+                startActivity(intent);
+            }
+        });
+    }
+}
+
+
+// activity3
+package com.example.pract12;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class Activity3 extends AppCompatActivity {
+    private TextView tvData;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_3);
+
+        tvData = findViewById(R.id.tv_data);
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("data")) {
+            String data = intent.getStringExtra("data");
+            tvData.setText(data);
+        }
+    }
+}
+
+
+// xm1
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:gravity="center">
+
+<Button
+    android:id="@+id/btn_next"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Next" />
+
+</LinearLayout>
+
+
+//xml2
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <EditText
+        android:id="@+id/et_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter data" />
+
+    <Button
+        android:id="@+id/btn_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Share" />
+
+</LinearLayout>
+
+
+//xml3
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tv_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Received Data" />
+
+</LinearLayout>
